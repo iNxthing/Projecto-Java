@@ -16,7 +16,7 @@ create table grado (
     nombre varchar(45) not null
 );
 
-insert into grado (nombre) values ('Sexto'), ('Séptimo');
+insert into grado (nombre) values ('Sexto'), ('Séptimo'), ('Octavo');
 
 create table periodo (
     id_periodo int auto_increment primary key,
@@ -33,6 +33,9 @@ create table asignatura (
 );
 
 insert into asignatura (nombre, id_grado) values ('Matemáticas', 1), ('Español', 1);
+insert into asignatura (nombre, id_grado) values
+('Inglés', 2),
+('Ciencias', 3);
 
 create table usuario (
     idUsuario int auto_increment primary key,
@@ -49,6 +52,11 @@ create table usuario (
 insert into usuario (documento, nombre, usr, pass, idPerfil, idAsignatura) 
 values ('0000', 'Administrador', 'admin', '1234', 1, null);
 
+insert into usuario (documento, nombre, usr, pass, idPerfil, idAsignatura) values
+('1001', 'Margarita', 'margarita', '5678', 2, 2),
+('1002', 'Adrian', 'adrian', '9010', 2, 1),
+('1003', 'Andres', 'andres', '6780', 2, 4);
+
 create table estudiante (
     id_estudiante int auto_increment primary key,
     documento varchar(20) not null unique,
@@ -56,6 +64,14 @@ create table estudiante (
     id_grado int not null,
     foreign key (id_grado) references grado(id_grado)
 );
+
+insert into estudiante (documento, nombre, id_grado) values
+('EST6001', 'Laura Gomez', 1),
+('EST6002', 'Mateo Ruiz', 1),
+('EST7001', 'Sofia Torres', 2),
+('EST7002', 'Daniel Castro', 2),
+('EST8001', 'Valentina Rojas', 3),
+('EST8002', 'Samuel Perez', 3);
 
 create table nota (
     id_nota int auto_increment primary key,
@@ -145,8 +161,22 @@ create procedure sp_guardar_nota(
 )
 begin
     insert into nota (id_estudiante, id_asignatura, id_periodo, valor_nota)
-    values (p_id_estudiante, p_id_asignatura, p_id_periodo, p_valor_nota)
-    on duplicate key update valor_nota = p_valor_nota;
+    values (p_id_estudiante, p_id_asignatura, p_id_periodo, p_valor_nota);
+end //
+
+drop procedure if exists sp_actualizar_nota //
+create procedure sp_actualizar_nota(
+    in p_id_estudiante int,
+    in p_id_asignatura int,
+    in p_id_periodo int,
+    in p_valor_nota decimal(4, 2)
+)
+begin
+    update nota
+    set valor_nota = p_valor_nota
+    where id_estudiante = p_id_estudiante
+      and id_asignatura = p_id_asignatura
+      and id_periodo = p_id_periodo;
 end //
 
 drop procedure if exists sp_listar_para_notas //
@@ -179,22 +209,32 @@ begin
         e.documento as Documento,
         e.nombre as Estudiante,
         g.nombre as Grado,
-        a.nombre as Asignatura,
-        ifnull(u.nombre, 'Sin asignar') as Profesor
+        a.nombre as Asignatura
     from estudiante e
     inner join grado g on e.id_grado = g.id_grado
     inner join asignatura a on g.id_grado = a.id_grado
-    left join usuario u on (a.id_asignatura = u.idAsignatura and u.idPerfil = 2)
     where g.id_grado = p_id_grado
       and a.id_asignatura = p_id_asignatura
     order by g.nombre, a.nombre, e.nombre;
 end //
 
+drop function if exists fn_estado_aprobacion //
+create function fn_estado_aprobacion(
+    p_nota decimal(4, 2),
+    p_nota_minima decimal(4, 2)
+)
+returns varchar(10) deterministic
+begin
+    if p_nota >= p_nota_minima then
+        return 'APROBADO';
+    else
+        return 'REPROBADO';
+    end if;
+end //
 
 drop procedure if exists sp_reporte_rendimiento //
 create procedure sp_reporte_rendimiento(
     in p_nota_minima decimal(4, 2),
-    in p_id_grado int,
     in p_id_asignatura int,
     in p_id_estudiante int,
     in p_id_periodo int
@@ -207,19 +247,59 @@ begin
         a.nombre as Asignatura,
         per.nombre as Periodo,
         n.valor_nota as Nota,
-        case 
-            when n.valor_nota >= p_nota_minima then 'APROBADO'
-            else 'REPROBADO'
-        end as Estado
+        fn_estado_aprobacion(n.valor_nota, p_nota_minima) as Estado
     from nota n
     inner join estudiante e on n.id_estudiante = e.id_estudiante
     inner join grado g on e.id_grado = g.id_grado
     inner join asignatura a on n.id_asignatura = a.id_asignatura
     inner join periodo per on n.id_periodo = per.id_periodo
-    where g.id_grado = p_id_grado
-      and a.id_asignatura = p_id_asignatura
+    where a.id_asignatura = p_id_asignatura
       and e.id_estudiante = p_id_estudiante
       and per.id_periodo = p_id_periodo
+    order by g.nombre, a.nombre, per.nombre, e.nombre;
+end //
+
+drop procedure if exists sp_reporte_rendimiento_general //
+create procedure sp_reporte_rendimiento_general(
+	in p_nota_minima decimal(4, 2)
+)
+begin
+    select 
+        e.documento as Documento,
+        e.nombre as Estudiante,
+        g.nombre as Grado,
+        a.nombre as Asignatura,
+        per.nombre as Periodo,
+        n.valor_nota as Nota,
+        fn_estado_aprobacion(n.valor_nota, p_nota_minima) as Estado
+    from nota n
+    inner join estudiante e on n.id_estudiante = e.id_estudiante
+    inner join grado g on e.id_grado = g.id_grado
+    inner join asignatura a on n.id_asignatura = a.id_asignatura
+    inner join periodo per on n.id_periodo = per.id_periodo
+    order by g.nombre, a.nombre, per.nombre, e.nombre;
+end //
+
+drop procedure if exists sp_reporte_rendimiento_estudiantes_profesor //
+create procedure sp_reporte_rendimiento_estudiantes_profesor(
+    in p_nota_minima decimal(4, 2),
+    in p_id_asignatura int
+)
+begin
+    select 
+        e.documento as Documento,
+        e.nombre as Estudiante,
+        g.nombre as Grado,
+        a.nombre as Asignatura,
+        per.nombre as Periodo,
+        n.valor_nota as Nota,
+        fn_estado_aprobacion(n.valor_nota, p_nota_minima) as Estado
+    from nota n
+    inner join estudiante e on n.id_estudiante = e.id_estudiante
+    inner join grado g on e.id_grado = g.id_grado
+    inner join asignatura a on n.id_asignatura = a.id_asignatura
+    inner join periodo per on n.id_periodo = per.id_periodo
+    where a.id_asignatura = p_id_asignatura
     order by g.nombre, a.nombre, per.nombre, e.nombre;
 end //
 
@@ -264,13 +344,29 @@ begin
     from asignatura a;
 end //
 
+drop procedure if exists sp_combo_estudiantes_asignatura //
+create procedure sp_combo_estudiantes_asignatura(
+    in p_id_asignatura int
+)
+begin
+    select
+        e.documento as Documento,
+        e.id_estudiante as idEstudiante,
+        e.nombre as Estudiante
+    from estudiante e
+    inner join asignatura a on e.id_grado = a.id_grado
+    where a.id_asignatura = p_id_asignatura
+    order by e.nombre;
+end //
+
 drop procedure if exists sp_combo_estudiantes //
 create procedure sp_combo_estudiantes()
 begin
     select 
-        id_estudiante as idEstudiante, 
-        concat(documento, ' - ', nombre) as nombreEstudiante 
-    from estudiante 
+		e.documento as Documento,
+        e.id_estudiante as idEstudiante, 
+        e.nombre as Estudiante 
+    from estudiante e
     order by nombre;
 end //
 
@@ -285,6 +381,9 @@ begin
     inner join grado g on a.id_grado = g.id_grado
     where u.idUsuario = p_id_profesor;
 end //
+
+
+
 
 drop procedure if exists sp_agregar_grado //
 create procedure sp_agregar_grado(

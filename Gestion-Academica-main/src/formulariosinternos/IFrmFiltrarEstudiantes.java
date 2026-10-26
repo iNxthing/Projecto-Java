@@ -92,6 +92,7 @@ public class IFrmFiltrarEstudiantes extends javax.swing.JInternalFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -99,8 +100,7 @@ public class IFrmFiltrarEstudiantes extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbmAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(cbmAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -164,19 +164,17 @@ public class IFrmFiltrarEstudiantes extends javax.swing.JInternalFrame {
 
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
             DefaultTableModel modelo = new DefaultTableModel();
-
             PreparedStatement pstm = conexion.prepareCall("call sp_filtro_matriculados(?,?)");
             pstm.setInt(1, idGrado);
             pstm.setInt(2, idAsignatura);
             ResultSet rs = pstm.executeQuery();
-
             ResultSetMetaData rsmt = rs.getMetaData();
 
             for(int i =1; i<= rsmt.getColumnCount(); i++){
                 modelo.addColumn(rsmt.getColumnLabel(i));
             }
             while (rs.next()) {
-                modelo.addRow(new Object[]{rs.getString("Documento"),rs.getString("Estudiante"),rs.getString("Grado"),rs.getString("Asignatura"),rs.getString("Profesor")});
+                modelo.addRow(new Object[]{rs.getString("Documento"),rs.getString("Estudiante"),rs.getString("Grado"),rs.getString("Asignatura")});
             }
 
             tableEstudiantes.setModel(modelo);

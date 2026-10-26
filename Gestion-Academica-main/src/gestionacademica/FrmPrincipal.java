@@ -54,7 +54,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         desktopPane = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
-        menuFIltrarPorEstudiante = new javax.swing.JMenuItem();
         menuIngresarNotas = new javax.swing.JMenuItem();
         menuRendimiento = new javax.swing.JMenuItem();
         menuCerrarSesion = new javax.swing.JMenuItem();
@@ -63,6 +62,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         menuRegistrarProfesor = new javax.swing.JMenuItem();
         menuAgregarGrado = new javax.swing.JMenuItem();
         menuAgregarAsignatura = new javax.swing.JMenuItem();
+        menuFIltrarPorEstudiante = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,10 +78,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         );
 
         menuArchivo.setText("Archivo");
-
-        menuFIltrarPorEstudiante.setText("Filtrar Por Estudiante");
-        menuFIltrarPorEstudiante.addActionListener(this::menuFIltrarPorEstudianteActionPerformed);
-        menuArchivo.add(menuFIltrarPorEstudiante);
 
         menuIngresarNotas.setText("Ingresar Notas");
         menuIngresarNotas.addActionListener(this::menuIngresarNotasActionPerformed);
@@ -114,6 +110,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
         menuAgregarAsignatura.setText("Agregar Asignatura");
         menuAgregarAsignatura.addActionListener(this::menuAgregarAsignaturaActionPerformed);
         menuAdministrar.add(menuAgregarAsignatura);
+
+        menuFIltrarPorEstudiante.setText("Filtrar Por Estudiante");
+        menuFIltrarPorEstudiante.addActionListener(this::menuFIltrarPorEstudianteActionPerformed);
+        menuAdministrar.add(menuFIltrarPorEstudiante);
 
         jMenuBar1.add(menuAdministrar);
 
@@ -150,7 +150,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void menuRendimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRendimientoActionPerformed
         // TODO add your handling code here:
-        mostrarRendimiento = new IFrmRendimiento();
+        mostrarRendimiento = new IFrmRendimiento(cargo, idProfesor);
         desktopPane.add(mostrarRendimiento);
         mostrarRendimiento.show();
     }//GEN-LAST:event_menuRendimientoActionPerformed

@@ -9,14 +9,6 @@
             <Property name="text" type="java.lang.String" value="Archivo"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="menuFIltrarPorEstudiante">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Filtrar Por Estudiante"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuFIltrarPorEstudianteActionPerformed"/>
-              </Events>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuIngresarNotas">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ingresar Notas"/>
@@ -78,6 +70,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuAgregarAsignaturaActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuFIltrarPorEstudiante">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Filtrar Por Estudiante"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuFIltrarPorEstudianteActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

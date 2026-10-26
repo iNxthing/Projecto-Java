@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -45,6 +46,7 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
         txtNota.setText("");
         llenarComboAsignaturas();
         llenarComboPeriodos();
+        llenarEncabezado();
     }
 
     /**
@@ -66,6 +68,7 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         txtNota = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
+        bntActualizar = new javax.swing.JButton();
 
         setClosable(true);
 
@@ -100,6 +103,9 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
         btnGuardar.setText("Guardar Nota");
         btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
+        bntActualizar.setText("Actualizar Nota");
+        bntActualizar.addActionListener(this::bntActualizarActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -122,7 +128,9 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnGuardar)))
+                        .addComponent(btnGuardar)
+                        .addGap(18, 18, 18)
+                        .addComponent(bntActualizar)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
         );
@@ -140,7 +148,8 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar))
+                    .addComponent(btnGuardar)
+                    .addComponent(bntActualizar))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -150,7 +159,7 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
         // TODO add your handling code here:
-        cargarEstudiantes();
+        mostrarEstudiantes();
     }//GEN-LAST:event_btnCargarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -158,20 +167,12 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
         guardarNota();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void cargarEstudiantes(){
-        int asignaturaSeleccionada = cbmAsignatura.getSelectedIndex() - 1;
-        int periodoSeleccionado = cbmPeriodo.getSelectedIndex() - 1;
+    private void bntActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntActualizarActionPerformed
+        // TODO add your handling code here:
+        actualizarNota();
+    }//GEN-LAST:event_bntActualizarActionPerformed
 
-        if(asignaturaSeleccionada == -1 || periodoSeleccionado == -1){
-            JOptionPane.showMessageDialog(this, "Debes seleccionar una asignatura y un periodo");
-            return;
-        }
 
-        Asignatura asignatura = listaAsignaturas.get(asignaturaSeleccionada);
-        Periodo periodo = listaPeriodos.get(periodoSeleccionado);
-
-        mostrarEstudiantes(asignatura.getIdAsignatura(), periodo.getIdPeriodo());
-    }
 
     private void guardarNota(){
         int fila = tableNotas.getSelectedRow();
@@ -199,6 +200,10 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
         }
 
         Estudiante estudiante = listaEstudiantes.get(fila);
+        if(!"Sin nota".equals(estudiante.getNota())){
+            JOptionPane.showMessageDialog(this, "El estudiante ya tiene una nota. Use Actualizar Nota");
+            return;
+        }
 
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
             PreparedStatement pstm = conexion.prepareCall("call sp_guardar_nota(?,?,?,?)");
@@ -209,41 +214,118 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
             pstm.setDouble(4, nota);
             pstm.execute();
             txtNota.setText("");
-            mostrarEstudiantes(idAsignaturaCargada, idPeriodoCargado);
+            mostrarEstudiantes();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
         }
     }
 
-    private void mostrarEstudiantes(int idAsignatura, int idPeriodo){
+    private void actualizarNota(){
+        int fila = tableNotas.getSelectedRow();
+        if(fila == -1){
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un estudiante de la tabla");
+            return;
+        }
+
+        Estudiante estudiante = listaEstudiantes.get(fila);
+        if("Sin nota".equals(estudiante.getNota())){
+            JOptionPane.showMessageDialog(this, "El estudiante no tiene una nota para actualizar. Use Guardar Nota");
+            return;
+        }
+
+        String texto = txtNota.getText().trim();
+        if(texto.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Escriba la nota del estudiante");
+            return;
+        }
+
+        double nota;
+        try {
+            nota = Double.parseDouble(texto);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "La nota debe ser un número, use punto para los decimales");
+            return;
+        }
+        if(nota < 0 || nota > 5){
+            JOptionPane.showMessageDialog(this, "La nota debe estar entre 0 y 5");
+            return;
+        }
+
+        try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
+            PreparedStatement pstm = conexion.prepareCall("call sp_actualizar_nota(?,?,?,?)");
+
+            pstm.setInt(1, estudiante.getIdEstudiante());
+            pstm.setInt(2, idAsignaturaCargada);
+            pstm.setInt(3, idPeriodoCargado);
+            pstm.setDouble(4, nota);
+            pstm.execute();
+            txtNota.setText("");
+            mostrarEstudiantes();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
+        }
+    }
+
+    private void llenarEncabezado(){
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
             DefaultTableModel modelo = new DefaultTableModel();
-            modelo.addColumn("Documento");
-            modelo.addColumn("Estudiante");
-            modelo.addColumn("Nota");
-
             PreparedStatement pstm = conexion.prepareCall("call sp_listar_para_notas(?,?)");
-            pstm.setInt(1, idAsignatura);
-            pstm.setInt(2, idPeriodo);
+            pstm.setInt(1, 0);
+            pstm.setInt(2, 0);
             ResultSet rs = pstm.executeQuery();
+            ResultSetMetaData rsmt = rs.getMetaData();
+
+            for(int i =1; i<= rsmt.getColumnCount(); i++){
+                modelo.addColumn(rsmt.getColumnLabel(i));
+            }
+            tableNotas.setModel(modelo);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
+        }  
+    }
+    private void mostrarEstudiantes(){
+        int asignaturaSeleccionada = cbmAsignatura.getSelectedIndex() - 1;
+        int periodoSeleccionado = cbmPeriodo.getSelectedIndex() - 1;
+        
+        if(asignaturaSeleccionada == -1 || periodoSeleccionado == -1){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una asignatura y un periodo");
+            return;
+        }
+
+        Asignatura asignatura = listaAsignaturas.get(asignaturaSeleccionada);
+        Periodo periodo = listaPeriodos.get(periodoSeleccionado);
+        idAsignaturaCargada = asignatura.getIdAsignatura();
+        idPeriodoCargado = periodo.getIdPeriodo();
+
+        try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
+            DefaultTableModel modelo = new DefaultTableModel();
+            PreparedStatement pstm = conexion.prepareCall("call sp_listar_para_notas(?,?)");
+            pstm.setInt(1, idAsignaturaCargada);
+            pstm.setInt(2, idPeriodoCargado);
+            ResultSet rs = pstm.executeQuery();
+            ResultSetMetaData rsmt = rs.getMetaData();
+
+            for(int i =1; i<= rsmt.getColumnCount(); i++){
+                modelo.addColumn(rsmt.getColumnLabel(i));
+            }
 
             listaEstudiantes = new ArrayList();
             while (rs.next()) {
                 int id = rs.getInt("idEstudiante");
+                String documento = rs.getString("Documento");
                 String nombre = rs.getString("Estudiante");
                 String nota = rs.getString("Nota");
                 if(nota == null){
                     nota = "Sin nota";
                 }
 
-                Estudiante estudiante = new Estudiante(id,nombre);
+                Estudiante estudiante = new Estudiante(documento,id,nombre,nota);
                 listaEstudiantes.add(estudiante);
-                modelo.addRow(new Object[]{rs.getString("Documento"),estudiante.getNombre(),nota});
+                modelo.addRow(new Object[]{estudiante.getIdEstudiante(),estudiante.getDocumento(),estudiante.getNombre(),estudiante.getNota()});
             }
 
             tableNotas.setModel(modelo);
-            idAsignaturaCargada = idAsignatura;
-            idPeriodoCargado = idPeriodo;
 
         }catch(SQLException e){
             JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
@@ -295,6 +377,7 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bntActualizar;
     private javax.swing.JButton btnCargar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<String> cbmAsignatura;

@@ -3,16 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/formulariosinternos/IFrmNotas.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/formulariosinternos/IFrmFiltrarEstudiantes.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/formulariosinternos/IFrmRendimiento.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/gestionacademica/InfoConexion.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/formulariosinternos/IFrmMatricula.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/formulariosinternos/IFrmAgregarGrado.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/formulariosinternos/IFrmAgregarAsignatura.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/gestionacademica/FrmPrincipal.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/gestionacademica/FrmLogin.java</file>
-            <file>file:/home/nothing/Documents/GestionAcademicaJorley/Gestion-Academica-main/src/formulariosinternos/IFrmNuevoProfesor.java</file>
+            <file>file:/home/nothing/Documents/GestionAcademica/Gestion-Academica-main/src/gestionacademica/FrmLogin.java</file>
+            <file>file:/home/nothing/Documents/GestionAcademica/Gestion-Academica-main/src/formulariosinternos/IFrmRendimiento.java</file>
         </group>
     </open-files>
 </project-private>

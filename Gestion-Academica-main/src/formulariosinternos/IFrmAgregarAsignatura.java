@@ -132,7 +132,7 @@ public class IFrmAgregarAsignatura extends javax.swing.JInternalFrame {
     private void agregarAsignatura(){
         
         
-        int idGrado = cbmGrado.getSelectedIndex() - 1;
+        int idGrado = cbmGrado.getSelectedIndex();
         String nuevaAsignatura = txtNuevaAsignatura.getText();
         if (nuevaAsignatura == null) {
             JOptionPane.showMessageDialog(this, "Debe Escribir el nombre de la nueva asignatura");

@@ -29,19 +29,40 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
     ArrayList<Asignatura> listaAsignaturas;
     ArrayList<Estudiante> listaEstudiantes;
     ArrayList<Periodo> listaPeriodos;
-    public IFrmRendimiento() {
+    int cargo;
+    int idProfesor;
+    public IFrmRendimiento(int cargo, int idProfesor) {
         initComponents();
         con = new InfoConexion();
         listaGrados = new ArrayList();
         listaAsignaturas = new ArrayList();
         listaEstudiantes = new ArrayList();
         listaPeriodos = new ArrayList();
+        this.cargo = cargo;
+        this.idProfesor = idProfesor;
         txtNotaMinima.setText("");
-        llenarComboGrados();
         llenarComboAsignaturas();
-        llenarComboEstudiantes();
+        
+        
         llenarComboPeriodos();
-        mostrarRendimiento();
+        llenarEncabezado();
+        rbtnTodos.setSelected(true);
+        filtrarPor();
+        if(cargo > 1 && cbmAsignatura.getItemCount() > 1){
+            cbmAsignatura.setSelectedIndex(1);
+            seleccionarAsignatura();
+            cbmEstudiante.setVisible(false);
+            cbmPeriodo.setVisible(false);
+            btnMostrar.setVisible(false);
+            cbmAsignatura.setVisible(false);
+            lblAsignatura.setVisible(false);
+            btnSelecAsignatura.setVisible(false);
+        }else{
+            cbmEstudiante.setVisible(false);
+            cbmPeriodo.setVisible(false);
+            btnMostrar.setVisible(false);  
+        }
+        
     }
 
     /**
@@ -53,19 +74,24 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        filtrarPor = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         txtNotaMinima = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        cbmGrado = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
+        lblAsignatura = new javax.swing.JLabel();
         cbmAsignatura = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
+        lblEstudiante = new javax.swing.JLabel();
         cbmEstudiante = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
+        lblPeriodo = new javax.swing.JLabel();
         cbmPeriodo = new javax.swing.JComboBox<>();
         btnMostrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableRendimiento = new javax.swing.JTable();
+        btnSelecAsignatura = new javax.swing.JButton();
+        btnCargarTodos = new javax.swing.JButton();
+        rbtnTodos = new javax.swing.JRadioButton();
+        rbtnEstudiante = new javax.swing.JRadioButton();
+        jLabel2 = new javax.swing.JLabel();
+        btnFiltrar = new javax.swing.JButton();
 
         setClosable(true);
 
@@ -73,19 +99,15 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
 
         txtNotaMinima.setText("jTextField1");
 
-        jLabel2.setText("Grado:");
-
-        cbmGrado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel3.setText("Asignatura:");
+        lblAsignatura.setText("Asignatura:");
 
         cbmAsignatura.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel4.setText("Estudiante:");
+        lblEstudiante.setText("Estudiante:");
 
         cbmEstudiante.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel5.setText("Periodo:");
+        lblPeriodo.setText("Periodo:");
 
         cbmPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -105,6 +127,23 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(tableRendimiento);
 
+        btnSelecAsignatura.setText("Seleccionar Asignatura");
+        btnSelecAsignatura.addActionListener(this::btnSelecAsignaturaActionPerformed);
+
+        btnCargarTodos.setText("Cargar Todos");
+        btnCargarTodos.addActionListener(this::btnCargarTodosActionPerformed);
+
+        filtrarPor.add(rbtnTodos);
+        rbtnTodos.setText("Todos");
+
+        filtrarPor.add(rbtnEstudiante);
+        rbtnEstudiante.setText("Estudiante");
+
+        jLabel2.setText("Filtrar por:");
+
+        btnFiltrar.setText("FIltrar");
+        btnFiltrar.addActionListener(this::btnFiltrarActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -112,54 +151,70 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtNotaMinima))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(cbmGrado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel3))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(cbmEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel5)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cbmPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cbmAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(btnMostrar))
-                .addContainerGap(231, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNotaMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblAsignatura)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbmAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSelecAsignatura))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblEstudiante)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbmEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblPeriodo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbmPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnMostrar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCargarTodos)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rbtnTodos)
+                    .addComponent(rbtnEstudiante)
+                    .addComponent(jLabel2)
+                    .addComponent(btnFiltrar))
+                .addGap(66, 66, 66))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtNotaMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(cbmGrado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(cbmAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(cbmEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(cbmPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMostrar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtNotaMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblAsignatura)
+                            .addComponent(cbmAsignatura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSelecAsignatura))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblEstudiante)
+                            .addComponent(cbmEstudiante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPeriodo)
+                            .addComponent(cbmPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnMostrar)
+                            .addComponent(btnCargarTodos)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rbtnTodos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rbtnEstudiante)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnFiltrar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                 .addContainerGap())
@@ -173,8 +228,53 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
         mostrarRendimiento();
     }//GEN-LAST:event_btnMostrarActionPerformed
 
+    private void btnSelecAsignaturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecAsignaturaActionPerformed
+        // TODO add your handling code here:
+        seleccionarAsignatura();
+        btnCargarTodos.setVisible(false);
+        lblAsignatura.setVisible(true);
+        lblEstudiante.setVisible(true);
+        lblPeriodo.setVisible(true);
+    }//GEN-LAST:event_btnSelecAsignaturaActionPerformed
+
+    private void btnCargarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarTodosActionPerformed
+        // TODO add your handling code here:
+        cargarTodos();
+    }//GEN-LAST:event_btnCargarTodosActionPerformed
+
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        // TODO add your handling code here:
+        filtrarPor();
+        
+        
+    }//GEN-LAST:event_btnFiltrarActionPerformed
+    private void llenarEncabezado(){
+        try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
+            DefaultTableModel modelo = new DefaultTableModel();
+
+            PreparedStatement pstm = conexion.prepareCall("call sp_reporte_rendimiento(?,?,?,?)");
+            pstm.setDouble(1, 0);
+            pstm.setInt(2, 0);
+            pstm.setInt(3, 0);
+            pstm.setInt(4, 0);
+            ResultSet rs = pstm.executeQuery();
+
+            ResultSetMetaData rsmt = rs.getMetaData();
+
+            for(int i =1; i<= rsmt.getColumnCount(); i++){
+                modelo.addColumn(rsmt.getColumnLabel(i));
+            }
+            
+
+            tableRendimiento.setModel(modelo);
+
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
+        }
+    }
     private void mostrarRendimiento(){
         String texto = txtNotaMinima.getText().trim();
+        
         if(texto.isEmpty()){
             JOptionPane.showMessageDialog(this, "Escriba la nota mínima para aprobar");
             return;
@@ -192,43 +292,30 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
             return;
         }
 
-        int gradoSeleccionado = cbmGrado.getSelectedIndex() - 1;
         int asignaturaSeleccionada = cbmAsignatura.getSelectedIndex() - 1;
         int estudianteSeleccionado = cbmEstudiante.getSelectedIndex() - 1;
         int periodoSeleccionado = cbmPeriodo.getSelectedIndex() - 1;
 
-        
-        int idGrado = 0;
-        int idAsignatura = 0;
-        int idEstudiante = 0;
-        int idPeriodo = 0;
+        if(asignaturaSeleccionada == -1 || estudianteSeleccionado == -1 || periodoSeleccionado == -1){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una asignatura, un estudiante y un periodo");
+            return;
+        }
 
-        if(gradoSeleccionado != -1){
-            Grado grado = listaGrados.get(gradoSeleccionado);
-            idGrado = grado.getIdGrado();
-        }
-        if(asignaturaSeleccionada != -1){
-            Asignatura asignatura = listaAsignaturas.get(asignaturaSeleccionada);
-            idAsignatura = asignatura.getIdAsignatura();
-        }
-        if(estudianteSeleccionado != -1){
-            Estudiante estudiante = listaEstudiantes.get(estudianteSeleccionado);
-            idEstudiante = estudiante.getIdEstudiante();
-        }
-        if(periodoSeleccionado != -1){
-            Periodo periodo = listaPeriodos.get(periodoSeleccionado);
-            idPeriodo = periodo.getIdPeriodo();
-        }
+        Asignatura asignatura = listaAsignaturas.get(asignaturaSeleccionada);
+        Estudiante estudiante = listaEstudiantes.get(estudianteSeleccionado);
+        Periodo periodo = listaPeriodos.get(periodoSeleccionado);
+        int idAsignatura = asignatura.getIdAsignatura();
+        int idEstudiante = estudiante.getIdEstudiante();
+        int idPeriodo = periodo.getIdPeriodo();
 
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
             DefaultTableModel modelo = new DefaultTableModel();
 
-            PreparedStatement pstm = conexion.prepareCall("call sp_reporte_rendimiento(?,?,?,?,?)");
+            PreparedStatement pstm = conexion.prepareCall("call sp_reporte_rendimiento(?,?,?,?)");
             pstm.setDouble(1, notaMinima);
-            pstm.setInt(2, idGrado);
-            pstm.setInt(3, idAsignatura);
-            pstm.setInt(4, idEstudiante);
-            pstm.setInt(5, idPeriodo);
+            pstm.setInt(2, idAsignatura);
+            pstm.setInt(3, idEstudiante);
+            pstm.setInt(4, idPeriodo);
             ResultSet rs = pstm.executeQuery();
 
             ResultSetMetaData rsmt = rs.getMetaData();
@@ -246,29 +333,91 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
         }
     }
-
-    private void llenarComboGrados(){
+    private void filtrarPor(){
+        if(cargo > 1 && cbmAsignatura.getItemCount() > 1){
+            lblAsignatura.setVisible(true);
+            btnCargarTodos.setVisible(true);
+        }else{
+            btnCargarTodos.setVisible(true);
+        }
+        
+        if (rbtnTodos.isSelected()) {
+            lblAsignatura.setVisible(false);
+            lblEstudiante.setVisible(false);
+            lblPeriodo.setVisible(false);
+            cbmAsignatura.setVisible(false);
+            btnSelecAsignatura.setVisible(false);
+            cbmEstudiante.setVisible(false);
+            cbmPeriodo.setVisible(false);
+            btnMostrar.setVisible(false);
+            btnCargarTodos.setVisible(true);
+        }
+        if (rbtnEstudiante.isSelected()) {
+            cbmAsignatura.setVisible(true);
+            btnSelecAsignatura.setVisible(true);
+            btnMostrar.setVisible(true);
+            btnCargarTodos.setVisible(false);
+        }
+    }
+    private void cargarTodos(){
+        String texto = txtNotaMinima.getText().trim();
+        int asignaturaSeleccionada = cbmAsignatura.getSelectedIndex() - 1;
+        double notaMinima;
+        try {
+            notaMinima = Double.parseDouble(texto);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "La nota debe ser un número, use punto para los decimales");
+            return;
+        }
+        if(notaMinima < 0 || notaMinima > 5){
+            JOptionPane.showMessageDialog(this, "La nota debe estar entre 0 y 5");
+            return;
+        }
+        if(cargo > 1 && asignaturaSeleccionada < 0){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una asignatura");
+            return;
+        }
+        
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
-
-            PreparedStatement pstm = conexion.prepareCall("call sp_combo_grados()");
-            ResultSet rs = pstm.executeQuery();
-            cbmGrado.removeAllItems();
-            cbmGrado.addItem("Seleccione...");
-            while (rs.next()) {
-                int id = rs.getInt("idGrado");
-                String nombre = rs.getString("nombreGrado");
-                Grado grado = new Grado(id,nombre);
-                cbmGrado.addItem(grado.getNombre());
-                listaGrados.add(grado);
+            PreparedStatement pstm;
+            if (cargo > 1) {
+                Asignatura asignatura = listaAsignaturas.get(asignaturaSeleccionada);
+                pstm = conexion.prepareCall("call sp_reporte_rendimiento_estudiantes_profesor(?,?)");
+                pstm.setDouble(1, notaMinima);
+                pstm.setInt(2, asignatura.getIdAsignatura());
+            } else {
+                pstm = conexion.prepareCall("call sp_reporte_rendimiento_general(?)");
+                pstm.setDouble(1, notaMinima);
             }
-        }catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error de la base de datos" + e);
+            DefaultTableModel modelo = new DefaultTableModel();
+            
+            
+            ResultSet rs = pstm.executeQuery();
+            ResultSetMetaData rsmt = rs.getMetaData();
+
+            for(int i =1; i<= rsmt.getColumnCount(); i++){
+                modelo.addColumn(rsmt.getColumnLabel(i));
+            }
+            while (rs.next()) {
+                modelo.addRow(new Object[]{rs.getString("Documento"),rs.getString("Estudiante"),rs.getString("Grado"),rs.getString("Asignatura"),rs.getString("Periodo"),rs.getString("Nota"),rs.getString("Estado")});
+            }
+
+            tableRendimiento.setModel(modelo);
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
         }
     }
 
     private void llenarComboAsignaturas(){
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
-            PreparedStatement pstm = conexion.prepareCall("call sp_combo_asignaturas()");
+            PreparedStatement pstm;
+            if(cargo > 1){
+                pstm = conexion.prepareCall("call sp_combo_asignaturas_profesor(?)");
+                pstm.setInt(1, idProfesor);
+            }else{
+                pstm = conexion.prepareCall("call sp_combo_asignaturas()");
+            }
 
             ResultSet rs = pstm.executeQuery();
 
@@ -286,19 +435,33 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
         }
     }
 
-    private void llenarComboEstudiantes(){
+    private void seleccionarAsignatura(){
+        int asignaturaSeleccionada = cbmAsignatura.getSelectedIndex() - 1;
+
+        cbmEstudiante.removeAllItems();
+        cbmEstudiante.addItem("Seleccione...");
+        listaEstudiantes = new ArrayList();
+        cbmEstudiante.setVisible(true);
+        cbmPeriodo.setVisible(true);
+        btnMostrar.setVisible(true);
+        if(asignaturaSeleccionada == -1){
+            return;
+        }
+
+        Asignatura asignatura = listaAsignaturas.get(asignaturaSeleccionada);
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
-            PreparedStatement pstm = conexion.prepareCall("call sp_combo_estudiantes()");
+            PreparedStatement pstm = conexion.prepareCall("call sp_combo_estudiantes_asignatura(?)");
+            pstm.setInt(1, asignatura.getIdAsignatura());
             ResultSet rs = pstm.executeQuery();
 
-            cbmEstudiante.removeAllItems();
-            cbmEstudiante.addItem("Seleccione...");
             while (rs.next()) {
                 int id = rs.getInt("idEstudiante");
-                String nombre = rs.getString("nombreEstudiante");
-                Estudiante estudiante = new Estudiante(id,nombre);
-                cbmEstudiante.addItem(estudiante.getNombre());
+                String documento = rs.getString("Documento");
+                String nombre = rs.getString("Estudiante");
+                Estudiante estudiante = new Estudiante(documento,id,nombre,null);
                 listaEstudiantes.add(estudiante);
+                cbmEstudiante.addItem(estudiante.getNombre());
+                System.out.println(estudiante.getNombre());
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
@@ -325,17 +488,22 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCargarTodos;
+    private javax.swing.JButton btnFiltrar;
     private javax.swing.JButton btnMostrar;
+    private javax.swing.JButton btnSelecAsignatura;
     private javax.swing.JComboBox<String> cbmAsignatura;
     private javax.swing.JComboBox<String> cbmEstudiante;
-    private javax.swing.JComboBox<String> cbmGrado;
     private javax.swing.JComboBox<String> cbmPeriodo;
+    private javax.swing.ButtonGroup filtrarPor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAsignatura;
+    private javax.swing.JLabel lblEstudiante;
+    private javax.swing.JLabel lblPeriodo;
+    private javax.swing.JRadioButton rbtnEstudiante;
+    private javax.swing.JRadioButton rbtnTodos;
     private javax.swing.JTable tableRendimiento;
     private javax.swing.JTextField txtNotaMinima;
     // End of variables declaration//GEN-END:variables

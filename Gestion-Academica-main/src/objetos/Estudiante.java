@@ -9,12 +9,20 @@ package objetos;
  * @author nothing
  */
 public class Estudiante {
+    private String Documento;
     private int idEstudiante;
     private String nombre;
+    private String nota;
 
-    public Estudiante(int idEstudiante, String nombre) {
+    public Estudiante(String Documento, int idEstudiante, String nombre, String nota) {
+        this.Documento = Documento;
         this.idEstudiante = idEstudiante;
         this.nombre = nombre;
+        this.nota = nota;
+    }
+
+    public String getDocumento() {
+        return Documento;
     }
 
     public int getIdEstudiante() {
@@ -24,5 +32,12 @@ public class Estudiante {
     public String getNombre() {
         return nombre;
     }
+
+    public String getNota() {
+        return nota;
+    }
+    
+
+    
     
 }
