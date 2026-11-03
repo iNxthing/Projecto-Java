@@ -34,6 +34,7 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
         llenarCombo();
         limpiar();
         mostrarProfesores();
+        btnEliminar.setEnabled(false);
     }
 
     /**
@@ -47,7 +48,7 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
 
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableMatriculados = new javax.swing.JTable();
+        tableProfesores = new javax.swing.JTable();
         btnMatricular = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtDocumento = new javax.swing.JTextField();
@@ -58,12 +59,13 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
         txtUsuarioProfesor = new javax.swing.JTextField();
         txtClaveProfesor = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        btnEliminar = new javax.swing.JButton();
 
         setClosable(true);
 
         jLabel3.setText("Asignatura del profesor");
 
-        tableMatriculados.setModel(new javax.swing.table.DefaultTableModel(
+        tableProfesores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -74,7 +76,12 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tableMatriculados);
+        tableProfesores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableProfesoresMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableProfesores);
 
         btnMatricular.setText("Registrar Profesor");
         btnMatricular.addActionListener(this::btnMatricularActionPerformed);
@@ -97,11 +104,13 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Clave");
 
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,12 +125,16 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(btnMatricular)
                     .addComponent(jLabel5)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(txtClaveProfesor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                        .addComponent(txtUsuarioProfesor, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addGap(308, 308, 308))
+                        .addComponent(txtUsuarioProfesor, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnMatricular)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEliminar)))
+                .addGap(209, 209, 209))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +160,8 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbmAsignaturas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnMatricular))
+                    .addComponent(btnMatricular)
+                    .addComponent(btnEliminar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE))
         );
@@ -198,6 +212,17 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
         }
 
     }//GEN-LAST:event_btnMatricularActionPerformed
+
+    private void tableProfesoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableProfesoresMouseClicked
+        // TODO add your handling code here:
+        btnEliminar.setEnabled(true);
+    }//GEN-LAST:event_tableProfesoresMouseClicked
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        eliminar_profesor();
+        btnEliminar.setEnabled(false);
+    }//GEN-LAST:event_btnEliminarActionPerformed
     private void mostrarProfesores(){
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
             DefaultTableModel modelo = new DefaultTableModel();
@@ -211,12 +236,38 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
                 modelo.addColumn(rsmt.getColumnLabel(i));
             }
             while (rs.next()) {                
-                modelo.addRow(new Object[]{rs.getString("Documento"),rs.getString("Profesor"),rs.getString("Asignatura"),rs.getString("Usuario"),rs.getString("Clave")});
+                modelo.addRow(new Object[]{rs.getInt("Id"),rs.getString("Documento"),rs.getString("Profesor"),rs.getString("Asignatura"),rs.getString("Usuario"),rs.getString("Clave")});
             }
             
-            tableMatriculados.setModel(modelo); 
+            tableProfesores.setModel(modelo); 
             
         }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
+        }
+    }
+    
+    public void eliminar_profesor(){
+        int fila = tableProfesores.getSelectedRow();
+        if(fila == -1){
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un profesor de la tabla");
+            return;
+        }
+        
+        int idProfesor = Integer.parseInt(tableProfesores.getValueAt(fila, 0).toString());
+        
+        if(idProfesor == 1){
+            JOptionPane.showMessageDialog(this, "No es posible eliminar al Administrador");
+            return;
+        }
+        
+        try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
+            PreparedStatement pstm = conexion.prepareCall("call sp_eliminar_profesor(?)");
+            pstm.setInt(1, idProfesor);
+            pstm.execute();
+            
+            JOptionPane.showMessageDialog(this, "Profesor eliminado exitosamente");
+            mostrarProfesores();
+        } catch(SQLException e){
             JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
         }
     }
@@ -249,6 +300,7 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnMatricular;
     private javax.swing.JComboBox<String> cbmAsignaturas;
     private javax.swing.JLabel jLabel1;
@@ -257,7 +309,7 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableMatriculados;
+    private javax.swing.JTable tableProfesores;
     private javax.swing.JTextField txtClaveProfesor;
     private javax.swing.JTextField txtDocumento;
     private javax.swing.JTextField txtNombreCompleto;

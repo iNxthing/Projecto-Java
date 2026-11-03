@@ -34,6 +34,7 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
         limpiar();
         llenarcombo();
         mostrarMatriculados();
+        btnEliminar.setEnabled(false);
     }
 
     /**
@@ -54,6 +55,7 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMatriculados = new javax.swing.JTable();
         btnMatricular = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
 
         setClosable(true);
 
@@ -80,10 +82,18 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableMatriculados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMatriculadosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableMatriculados);
 
         btnMatricular.setText("Matricular");
         btnMatricular.addActionListener(this::btnMatricularActionPerformed);
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,7 +109,8 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
                         .addComponent(txtDocumento)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cbmGrado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(btnMatricular))
+                    .addComponent(btnMatricular)
+                    .addComponent(btnEliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -120,6 +131,8 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
                 .addComponent(cbmGrado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnMatricular)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEliminar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -156,6 +169,17 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
         }
         
     }//GEN-LAST:event_btnMatricularActionPerformed
+
+    private void tableMatriculadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMatriculadosMouseClicked
+        // TODO add your handling code here:
+        btnEliminar.setEnabled(true);
+    }//GEN-LAST:event_tableMatriculadosMouseClicked
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        eliminar_estudiante();
+        btnEliminar.setEnabled(false);
+    }//GEN-LAST:event_btnEliminarActionPerformed
     private void limpiar(){
         txtDocumento.setText("");
         txtNombreCompleto.setText("");
@@ -173,12 +197,33 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
                 modelo.addColumn(rsmt.getColumnLabel(i));
             }
             while (rs.next()) {                
-                modelo.addRow(new Object[]{rs.getString("Documento"),rs.getString("Estudiante"),rs.getString("Grado")});
+                modelo.addRow(new Object[]{rs.getInt("Id"),rs.getString("Documento"),rs.getString("Estudiante"),rs.getString("Grado")});
             }
             
             tableMatriculados.setModel(modelo); 
             
         }catch(SQLException e){
+            JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
+        }
+    }
+    
+    public void eliminar_estudiante(){
+        int fila = tableMatriculados.getSelectedRow();
+        if(fila == -1){
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un estudiante de la tabla");
+            return;
+        }
+        
+        int idEstudiante = Integer.parseInt(tableMatriculados.getValueAt(fila, 0).toString());
+        
+        try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
+            PreparedStatement pstm = conexion.prepareCall("call sp_eliminar_estudiante(?)");
+            pstm.setInt(1, idEstudiante);
+            pstm.execute();
+            
+            JOptionPane.showMessageDialog(this, "Estudiante eliminado exitosamente");
+            mostrarMatriculados();
+        } catch(SQLException e){
             JOptionPane.showMessageDialog(this, "Error de la base de datos " + e);
         }
     }
@@ -203,6 +248,7 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnMatricular;
     private javax.swing.JComboBox<String> cbmGrado;
     private javax.swing.JLabel jLabel1;
