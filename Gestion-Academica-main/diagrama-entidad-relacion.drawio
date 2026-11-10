@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="er" name="ER Gestion Academica">
+    <mxGraphModel dx="1072" dy="585" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="perfil" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;fontSize=14;strokeWidth=2;" value="Perfil" vertex="1">
+          <mxGeometry height="50" width="160" x="40" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="usuario" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;fontSize=14;strokeWidth=2;" value="Usuario" vertex="1">
+          <mxGeometry height="50" width="160" x="300" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="asignatura" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;fontSize=14;strokeWidth=2;" value="Asignatura" vertex="1">
+          <mxGeometry height="50" width="160" x="560" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="grado" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;fontSize=14;strokeWidth=2;" value="Grado" vertex="1">
+          <mxGeometry height="50" width="160" x="840" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nota" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;fontSize=14;strokeWidth=2;" value="Nota" vertex="1">
+          <mxGeometry height="50" width="160" x="560" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="estudiante" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;fontSize=14;strokeWidth=2;" value="Estudiante" vertex="1">
+          <mxGeometry height="50" width="160" x="840" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="periodo" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontColor=#000000;fontStyle=1;fontSize=14;strokeWidth=2;" value="Periodo" vertex="1">
+          <mxGeometry height="50" width="160" x="560" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="usuario" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmandOne;startArrow=ERmany;endSize=12;startSize=12;strokeWidth=2;strokeColor=#000000;fontColor=#000000;fontSize=12;labelBackgroundColor=#FFFFFF;" target="perfil" value="tiene">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="usuario" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERzeroToOne;startArrow=ERmany;endSize=12;startSize=12;strokeWidth=2;strokeColor=#000000;fontColor=#000000;fontSize=12;labelBackgroundColor=#FFFFFF;" target="asignatura" value="imparte">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="asignatura" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmandOne;startArrow=ERmany;endSize=12;startSize=12;strokeWidth=2;strokeColor=#000000;fontColor=#000000;fontSize=12;labelBackgroundColor=#FFFFFF;" target="grado" value="pertenece a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="estudiante" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmandOne;startArrow=ERmany;endSize=12;startSize=12;strokeWidth=2;strokeColor=#000000;fontColor=#000000;fontSize=12;labelBackgroundColor=#FFFFFF;" target="grado" value="tiene">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="nota" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmandOne;startArrow=ERmany;endSize=12;startSize=12;strokeWidth=2;strokeColor=#000000;fontColor=#000000;fontSize=12;labelBackgroundColor=#FFFFFF;" target="estudiante" value="pertenece a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="nota" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmandOne;startArrow=ERmany;endSize=12;startSize=12;strokeWidth=2;strokeColor=#000000;fontColor=#000000;fontSize=12;labelBackgroundColor=#FFFFFF;" target="asignatura" value="corresponde a">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="nota" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=ERmandOne;startArrow=ERmany;endSize=12;startSize=12;strokeWidth=2;strokeColor=#000000;fontColor=#000000;fontSize=12;labelBackgroundColor=#FFFFFF;" target="periodo" value="se da en">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
