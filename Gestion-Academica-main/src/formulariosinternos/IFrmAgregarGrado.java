@@ -114,9 +114,10 @@ public class IFrmAgregarGrado extends javax.swing.JInternalFrame {
         mostrarGrados();
     }//GEN-LAST:event_btnAgregarActionPerformed
     private void agregarNuevoGrado(){
-        String gradoNuevo = txtNuevoGrado.getText();
-        if (gradoNuevo == null) {
+        String gradoNuevo = txtNuevoGrado.getText().trim();
+        if (gradoNuevo.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe Escribir el nombre de el nuevo Grado");
+            return;
         }
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
             

@@ -171,7 +171,7 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
 
     private void btnMatricularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMatricularActionPerformed
         // TODO add your handling code here:
-        String documento = txtDocumento.getText().trim();
+        String textoDocumento = txtDocumento.getText().trim();
         String nombre = txtNombreCompleto.getText().trim();
         
         String usuario = txtUsuarioProfesor.getText().trim();
@@ -179,8 +179,20 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
         
         int asignaturaSeleccionada = cbmAsignaturas.getSelectedIndex() - 1;
         
-        if(documento.isEmpty() || nombre.isEmpty() || asignaturaSeleccionada == -1 || usuario.isEmpty() || clave.isEmpty()){
+        if(textoDocumento.isEmpty() || nombre.isEmpty() || asignaturaSeleccionada == -1 || usuario.isEmpty() || clave.isEmpty()){
             JOptionPane.showMessageDialog(this, "Debes llenar todos los campos para poder matricular un estudiante");
+            return;
+        }
+        
+        int documento;
+        try {
+            documento = Integer.parseInt(textoDocumento);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "El documento debe ser un número válido, sin letras ni espacios");
+            return;
+        }
+        if(documento <= 0){
+            JOptionPane.showMessageDialog(this, "El documento debe ser un número mayor a cero");
             return;
         }
         
@@ -190,7 +202,7 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
         try (Connection conexion = DriverManager.getConnection(con.getUrl(), con.getUsername(), con.getPassword())) {
             PreparedStatement pstm = conexion.prepareCall("call sp_agregar_profesor(?,?,?,?,?)");
             
-            pstm.setString(1, documento);
+            pstm.setInt(1, documento);
             pstm.setString(2, nombre);
             pstm.setString(3, usuario);
             pstm.setString(4, clave);

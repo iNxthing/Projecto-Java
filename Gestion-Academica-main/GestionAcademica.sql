@@ -37,7 +37,7 @@ insert into asignatura (nombre, id_grado) values('Inglés', 2), ('Ciencias', 3);
 
 create table usuario (
     idUsuario int auto_increment primary key,
-    documento varchar(20) null,
+    documento int null,
     nombre varchar(100) not null,
     usr varchar(45) not null unique,
     pass varchar(45) not null,
@@ -48,28 +48,28 @@ create table usuario (
 );
 
 insert into usuario (documento, nombre, usr, pass, idPerfil, idAsignatura) 
-values ('0000', 'Administrador', 'admin', '1234', 1, null);
+values (0, 'Administrador', 'admin', '1234', 1, null);
 
 insert into usuario (documento, nombre, usr, pass, idPerfil, idAsignatura) values
-('1001', 'Margarita', 'margarita', '5678', 2, 2),
-('1002', 'Adrian', 'adrian', '9010', 2, 1),
-('1003', 'Andres', 'andres', '6780', 2, 4);
+(1001, 'Margarita', 'margarita', '5678', 2, 2),
+(1002, 'Adrian', 'adrian', '9010', 2, 1),
+(1003, 'Andres', 'andres', '6780', 2, 4);
 
 create table estudiante (
     id_estudiante int auto_increment primary key,
-    documento varchar(20) not null unique,
+    documento int not null unique,
     nombre varchar(100) not null,
     id_grado int not null,
     foreign key (id_grado) references grado(id_grado)
 );
 
 insert into estudiante (documento, nombre, id_grado) values
-('EST6001', 'Laura Gomez', 1),
-('EST6002', 'Mateo Ruiz', 1),
-('EST7001', 'Sofia Torres', 2),
-('EST7002', 'Daniel Castro', 2),
-('EST8001', 'Valentina Rojas', 3),
-('EST8002', 'Samuel Perez', 3);
+(6001, 'Laura Gomez', 1),
+(6002, 'Mateo Ruiz', 1),
+(7001, 'Sofia Torres', 2),
+(7002, 'Daniel Castro', 2),
+(8001, 'Valentina Rojas', 3),
+(8002, 'Samuel Perez', 3);
 
 create table nota (
     id_nota int auto_increment primary key,
@@ -85,14 +85,14 @@ create table nota (
 
 create table respaldo_estudiantes_matriculados (
     id_estudiante int not null,
-    documento varchar(20) not null unique,
+    documento int not null unique,
     nombre varchar(100) not null,
     id_grado int not null,
     fecha_eliminacion date
 );
 create table respaldo_profesores (
     idUsuario int not null,
-    documento varchar(20) null,
+    documento int null,
     nombre varchar(100) not null,
     usr varchar(45) not null unique,
     pass varchar(45) not null,
@@ -139,7 +139,7 @@ end //
 
 drop procedure if exists sp_agregar_profesor //
 create procedure sp_agregar_profesor(
-    in p_documento varchar(20),
+    in p_documento int,
     in p_nombre varchar(100),
     in p_usuario varchar(45),
     in p_clave varchar(45),
@@ -179,7 +179,7 @@ end //
 
 drop procedure if exists sp_matricular_estudiante //
 create procedure sp_matricular_estudiante(
-    in p_documento varchar(20),
+    in p_documento int,
     in p_nombre varchar(100),
     in p_id_grado int
 )
