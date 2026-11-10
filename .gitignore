@@ -1,4 +1,12 @@
-/Gestion-Academica-main/dist/
-/.
-/.
-/Gestion-Academica-main
+# NetBeans build outputs
+build/
+dist/
+nbproject/private/
+
+# Compiled Java class files
+*.class
+
+# OS / editor leftovers
+.DS_Store
+Thumbs.db
+*.swp
