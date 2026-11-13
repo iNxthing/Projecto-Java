@@ -85,7 +85,7 @@ create table nota (
 
 create table respaldo_estudiantes_matriculados (
     id_estudiante int not null,
-    documento int not null unique,
+    documento int not null ,
     nombre varchar(100) not null,
     id_grado int not null,
     fecha_eliminacion date
@@ -94,7 +94,7 @@ create table respaldo_profesores (
     idUsuario int not null,
     documento int null,
     nombre varchar(100) not null,
-    usr varchar(45) not null unique,
+    usr varchar(45) not null ,
     pass varchar(45) not null,
     idPerfil int not null,
     idAsignatura int null,
@@ -177,6 +177,19 @@ begin
       and idUsuario <> 1;
 end //
 
+drop procedure if exists sp_respaldo_de_profesor //
+create procedure sp_respaldo_profesor()
+begin
+	select 
+		rp.idUsuario as IdUsuario,
+        rp.documento as Documento,
+        rp.nombre as Nombre,
+        rp.usr as Usuario,
+        rp.pass as Clave,
+        rp.fecha_eliminacion as 'Fecha Eliminacion'
+    from respaldo_profesores rp;
+end //
+
 drop procedure if exists sp_matricular_estudiante //
 create procedure sp_matricular_estudiante(
     in p_documento int,
@@ -208,6 +221,17 @@ create procedure sp_eliminar_estudiante(
 begin
     delete from nota where id_estudiante = p_id_estudiante;
     delete from estudiante where id_estudiante = p_id_estudiante;
+end //
+
+drop procedure if exists sp_respaldo_de_estudiante //
+create procedure sp_respaldo_de_estudiante()
+begin
+	select 
+		rem.id_estudiante as ID,
+        rem.documento as Documento,
+        rem.nombre as Nombre,
+        rem.fecha_eliminacion as 'Fecha Eliminacion'
+    from respaldo_estudiantes_matriculados rem;
 end //
 
 drop procedure if exists sp_guardar_nota //

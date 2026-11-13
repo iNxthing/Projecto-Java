@@ -11,6 +11,8 @@ import formulariosinternos.IFrmNotas;
 import formulariosinternos.IFrmNuevoProfesor;
 import formulariosinternos.IFrmRendimiento;
 import formulariosinternos.IFrmAgregarGrado;
+import formulariosinternos.IfrmRespaldoEstudiante;
+import formulariosinternos.iFrmRespaldoProfesor;
 
 /**
  *
@@ -30,6 +32,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
     IFrmRendimiento mostrarRendimiento;
     IFrmAgregarGrado agregarGrado;
     IFrmAgregarAsignatura agregarAsignatura;
+    IfrmRespaldoEstudiante respaldoEstudiante;
+    iFrmRespaldoProfesor respaldoProfesor;
     FrmLogin login;
     int cargo;
     int idProfesor;
@@ -63,6 +67,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         menuAgregarGrado = new javax.swing.JMenuItem();
         menuAgregarAsignatura = new javax.swing.JMenuItem();
         menuFIltrarPorEstudiante = new javax.swing.JMenuItem();
+        menuRespaldoEstudiante = new javax.swing.JMenuItem();
+        menuRespaldoProfesor = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -114,6 +120,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
         menuFIltrarPorEstudiante.setText("Filtrar Por Estudiante");
         menuFIltrarPorEstudiante.addActionListener(this::menuFIltrarPorEstudianteActionPerformed);
         menuAdministrar.add(menuFIltrarPorEstudiante);
+
+        menuRespaldoEstudiante.setText("Respaldo Estudiante");
+        menuRespaldoEstudiante.addActionListener(this::menuRespaldoEstudianteActionPerformed);
+        menuAdministrar.add(menuRespaldoEstudiante);
+
+        menuRespaldoProfesor.setText("Respaldo Profesor");
+        menuRespaldoProfesor.addActionListener(this::menuRespaldoProfesorActionPerformed);
+        menuAdministrar.add(menuRespaldoProfesor);
 
         jMenuBar1.add(menuAdministrar);
 
@@ -190,6 +204,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
         agregarAsignatura.show();
     }//GEN-LAST:event_menuAgregarAsignaturaActionPerformed
 
+    private void menuRespaldoEstudianteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRespaldoEstudianteActionPerformed
+        // TODO add your handling code here:
+        respaldoEstudiante = new IfrmRespaldoEstudiante();
+        desktopPane.add(respaldoEstudiante);
+        respaldoEstudiante.show();
+    }//GEN-LAST:event_menuRespaldoEstudianteActionPerformed
+
+    private void menuRespaldoProfesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRespaldoProfesorActionPerformed
+        // TODO add your handling code here:
+        respaldoProfesor = new iFrmRespaldoProfesor();
+        desktopPane.add(respaldoProfesor);
+        respaldoProfesor.show();
+    }//GEN-LAST:event_menuRespaldoProfesorActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -228,5 +256,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuMatricularEstudiante;
     private javax.swing.JMenuItem menuRegistrarProfesor;
     private javax.swing.JMenuItem menuRendimiento;
+    private javax.swing.JMenuItem menuRespaldoEstudiante;
+    private javax.swing.JMenuItem menuRespaldoProfesor;
     // End of variables declaration//GEN-END:variables
 }
