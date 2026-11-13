@@ -71,6 +71,7 @@ public class IFrmNotas extends javax.swing.JInternalFrame {
         bntActualizar = new javax.swing.JButton();
 
         setClosable(true);
+        setTitle("Registrar Notas");
 
         jLabel1.setText("Asignatura:");
 

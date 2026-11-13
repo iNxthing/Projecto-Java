@@ -57,6 +57,7 @@ public class IFrmAgregarAsignatura extends javax.swing.JInternalFrame {
         cbmGrado = new javax.swing.JComboBox<>();
 
         setClosable(true);
+        setTitle("Registrar Asignatura");
 
         jLabel1.setText("Nombre de la Nueva Asignatura");
 

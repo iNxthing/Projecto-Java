@@ -71,6 +71,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         menuRespaldoProfesor = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Principal");
 
         javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
         desktopPane.setLayout(desktopPaneLayout);

@@ -46,6 +46,7 @@ public class FrmLogin extends javax.swing.JFrame {
         txtPass = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login");
 
         jButton1.setText("Iniciar Sesión");
         jButton1.addActionListener(this::jButton1ActionPerformed);

@@ -52,6 +52,7 @@ public class IFrmAgregarGrado extends javax.swing.JInternalFrame {
         tableGrados = new javax.swing.JTable();
 
         setClosable(true);
+        setTitle("Registrar Grado");
 
         jLabel1.setText("Nombre Del Nuevo Grado");
 

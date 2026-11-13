@@ -43,6 +43,7 @@ public class IfrmRespaldoEstudiante extends javax.swing.JInternalFrame {
         tableRespaldoEstudiante = new javax.swing.JTable();
 
         setClosable(true);
+        setTitle("Respaldo Estudiante");
 
         tableRespaldoEstudiante.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

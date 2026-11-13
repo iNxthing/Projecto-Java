@@ -57,6 +57,7 @@ public class IFrmFiltrarEstudiantes extends javax.swing.JInternalFrame {
         tableEstudiantes = new javax.swing.JTable();
 
         setClosable(true);
+        setTitle("Filtrar Estudiantes");
 
         jLabel1.setText("Grado:");
 

@@ -58,6 +58,7 @@ public class IFrmMatricula extends javax.swing.JInternalFrame {
         btnEliminar = new javax.swing.JButton();
 
         setClosable(true);
+        setTitle("Matricular Estudiantes");
 
         jLabel1.setText("Documento");
 

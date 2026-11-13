@@ -62,6 +62,7 @@ public class IFrmNuevoProfesor extends javax.swing.JInternalFrame {
         btnEliminar = new javax.swing.JButton();
 
         setClosable(true);
+        setTitle("Registrar Profesor");
 
         jLabel3.setText("Asignatura del profesor");
 

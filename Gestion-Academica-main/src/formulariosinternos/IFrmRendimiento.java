@@ -94,6 +94,7 @@ public class IFrmRendimiento extends javax.swing.JInternalFrame {
         btnFiltrar = new javax.swing.JButton();
 
         setClosable(true);
+        setTitle("Rendimiento Academico");
 
         jLabel1.setText("Nota minima para aprobar:");
 
